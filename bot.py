@@ -81,4 +81,11 @@ async def translate(ctx, arg, *, args):
 		return
 	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
 
+@bot.command()
+async def regex(ctx, args):
+	poke_id = row_from(["name.en"], args, True)
+	if poke_id == -1:
+		await ctx.send(f"Could not find a pokemon matching `{args}`")
+		return
+	await ctx.send(''.join(row_to(["name.en"], poke_id)))
 bot.run(os.getenv('TOKEN'))
