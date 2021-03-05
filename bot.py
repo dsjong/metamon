@@ -20,13 +20,14 @@ async def ping(ctx):
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
 
+name_cols = ["slug", "name.ja", "name.ja_r", "name.ja_t", "name.en"]
+type_cols = ["type.0", "type.1"]
 @bot.command(aliases=["weak"])
 async def weakness(ctx, *, args):
 	# args is either pokemon name or type
 	args = args[0].upper() + args[1:].lower()
-	types = []
-	if id_from_name(args) != -1: types = list(map(lambda x: TYPE_NUMBERS[x], types_from_name(args)))
-	elif args in TYPE_NUMBERS: types = [TYPE_NUMBERS[args]]
+	types = list(map(lambda x: TYPE_NUMBERS[x], row_to(type_cols, row_from(name_cols, args))))
+	if (not types) and (args in TYPE_NUMBERS): types = [TYPE_NUMBERS[args]]
 	if not types:
 		await ctx.send(f"Could not find a pokemon or type matching `{args}`")
 		return
@@ -47,7 +48,8 @@ async def weakness(ctx, *, args):
 
 @bot.command()
 async def type(ctx, *, args):
-	poke_id = id_from_name(args)
-	await ctx.send(f"Could not find a pokemon matching `{args}`" if poke_id == -1 else ', '.join(types_from_id(poke_id)))
+	poke_id = row_from(name_cols, args)
+	if poke_id == -1: await ctx.send(f"Could not find a pokemon matching `{args}`")
+	else: await ctx.send(', '.join(row_to(type_cols, poke_id)))
 
 bot.run(os.getenv('TOKEN'))
