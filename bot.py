@@ -48,6 +48,29 @@ async def weakness(ctx, *, args):
 		f"Immunities: {', '.join(immunities)}\n"
 	)
 
+@bot.command(aliases=["cover"])
+async def coverage(ctx, *, args):
+	args = args[0].upper() + args[1:].lower()
+	types = []
+	if args in TYPE_NUMBERS: types = [TYPE_NUMBERS[args]]
+	if not types:
+		await ctx.send(f"Could not find a type matching `{args}`")
+		return
+	weaknesses, resistances, immunities = [], [], []
+	for i in range(1, len(TYPES)):
+		typ_mult = 1
+		for j in types: typ_mult *= TYPE_EFFICACY[j][i]
+		def bolden(x):
+			return ''.join(['**', x, '**']) if (typ_mult==0.25 or typ_mult==4) else x
+		if typ_mult == 0: immunities += [bolden(TYPES[i])]
+		elif typ_mult > 1: weaknesses += [bolden(TYPES[i])]
+		elif typ_mult < 1: resistances += [bolden(TYPES[i])]
+	await ctx.send(
+		f"Super effective: {', '.join(weaknesses)}\n" +
+		f"Resists: {', '.join(resistances)}\n" +
+		f"Immunities: {', '.join(immunities)}\n"
+	)
+
 @bot.command()
 async def type(ctx, *, args):
 	poke_id = row_from(name_cols, args)
