@@ -20,8 +20,10 @@ async def ping(ctx):
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
 
-name_cols = ["slug", "name.ja", "name.ja_r", "name.ja_t", "name.en"]
+name_cols = ["slug", "name.ja", "name.ja_r", "name.ja_t", "name.en", "name.de", "name.fr"]
 type_cols = ["type.0", "type.1"]
+stat_cols = ["base.hp", "base.atk", "base.def", "base.satk", "base.sdef", "base.spd"]
+
 @bot.command(aliases=["weak"])
 async def weakness(ctx, *, args):
 	# args is either pokemon name or type
@@ -49,7 +51,34 @@ async def weakness(ctx, *, args):
 @bot.command()
 async def type(ctx, *, args):
 	poke_id = row_from(name_cols, args)
-	if poke_id == -1: await ctx.send(f"Could not find a pokemon matching `{args}`")
+	if poke_id == -1:
+		await ctx.send(f"Could not find a pokemon matching `{args}`")
+		return
 	else: await ctx.send(', '.join(row_to(type_cols, poke_id)))
+
+@bot.command()
+async def stats(ctx, *, args):
+	poke_id = row_from(name_cols, args)
+	if poke_id == -1:
+		await ctx.send(f"Could not find a pokemon matching `{args}`")
+		return
+	base_stats = row_to(stat_cols, poke_id)
+	await ctx.send(
+		f"HP: {base_stats[0]}\n" +
+		f"ATK: {base_stats[1]}\n" +
+		f"DEF: {base_stats[2]}\n" +
+		f"SATK: {base_stats[3]}\n" +
+		f"SDEF: {base_stats[4]}\n" +
+		f"SPD: {base_stats[5]}\n" +
+		f"**Total: {sum(base_stats)}**\n"
+	)
+
+@bot.command()
+async def translate(ctx, arg, *, args):
+	poke_id = row_from(name_cols, args)
+	if poke_id == -1:
+		await ctx.send(f"Could not find a pokemon matching `{args}`")
+		return
+	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
 
 bot.run(os.getenv('TOKEN'))
