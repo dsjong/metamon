@@ -111,4 +111,4 @@ async def regex(ctx, args):
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
 		return
 	await ctx.send(''.join(row_to(["name.en"], poke_id)))
-bot.run(os.environ['TOKEN'])
+bot.run("ODE3MjA0MjU1NTk2MjE2Mzgx.YEGGxQ.PiShW7lDAPLLqo7w1IURKIOlJXU")
