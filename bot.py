@@ -11,14 +11,14 @@ bot = commands.Bot(command_prefix='p!')
 
 @bot.event
 async def on_ready():
-	acteev = discord.Activity(type=discord.ActivityType.playing, name = random.choice(["Mew", "Pikachu", "Eevee", "Bryce orz"]))
-	await bot.change_presence(activity = acteev)
 	print('Logged in as')
 	print(bot.user.name)
 	print(bot.user.id)
 
 @bot.command()
 async def ping(ctx):
+	discord_status = discord.Activity(type=discord.ActivityType.playing, name = random.choice(["Mew", "Pikachu", "Eevee"]))
+	await bot.change_presence(activity = discord_status)
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
 
