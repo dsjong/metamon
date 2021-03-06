@@ -18,7 +18,6 @@ async def on_ready():
 	print(bot.user.id)
 	cute = cycle(["Mew", "Pikachu", "Eevee"])
 	for player in cute:
-		print(player)
 		discord_status = discord.Activity(type=discord.ActivityType.playing, name = "with " + player)
 		await bot.change_presence(activity = discord_status)
 		await asyncio.sleep(300)
