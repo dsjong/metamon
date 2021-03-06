@@ -1,7 +1,7 @@
 # metamon
 
 A complementary bot for Pokétwo.
-[Invite to your server](https://discord.com/api/oauth2/authorize?client_id=817204255596216381&permissions=2148006976&scope=bot)
+[Invite to your server!](https://discord.com/api/oauth2/authorize?client_id=817204255596216381&permissions=2148006976&scope=bot)
 
 ## Todo
 
