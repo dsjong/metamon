@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
-import random
+import asyncio
+from itertools import cycle
 from fetch import *
 from constants import *
 
@@ -15,11 +16,15 @@ async def on_ready():
 	print('Logged in as')
 	print(bot.user.name)
 	print(bot.user.id)
+	cute = cycle(["Mew", "Pikachu", "Eevee"])
+	for player in cute:
+		print(player)
+		discord_status = discord.Activity(type=discord.ActivityType.playing, name = "with " + player)
+		await bot.change_presence(activity = discord_status)
+		await asyncio.sleep(300)
 
 @bot.command()
 async def ping(ctx):
-	discord_status = discord.Activity(type=discord.ActivityType.playing, name = random.choice(["Mew", "Pikachu", "Eevee"]))
-	await bot.change_presence(activity = discord_status)
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
 
