@@ -144,6 +144,11 @@ async def hint(ctx, *, args):
 	args = ''.join(['^', args.replace('_', '.'), '$'])
 	await ctx.invoke(bot.get_command('regex'), args=args)
 
+@client.command()
+	async def servers():
+		servers = list(self.client.servers)
+		await client.say(f"Connected on {str(len(servers))} servers:")
+		await client.say('\n'.join(server.name for server in servers))
 '''
 @bot.event
 async def on_message(message):
