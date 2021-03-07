@@ -138,6 +138,12 @@ async def regex(ctx, *, args):
 			if(tmp != -1):
 				poke_id = tmp
 				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
+
+@bot.command()
+async def hint(ctx, *, args):
+	args = ''.join(['^', args.replace('_', '.'), '$'])
+	await ctx.invoke(bot.get_command('regex'), args=args)
+
 '''
 @bot.event
 async def on_message(message):
