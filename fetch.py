@@ -17,9 +17,9 @@ def get_data_from(filename):
 		data = list({k: int(v) if isnumber(v) else v for k, v in row.items() if v!=""} for row in reader)
 	return data
 
-def row_from(cols: List[str], value, regex=False):
+def row_from(cols: List[str], value, regex=False, start=0, jump=1):
 	file = get_data_from("pokemon.csv")
-	for i in range(0, len(file)):
+	for i in range(start, len(file) if jump==1 else -1, jump):
 		for j in cols:
 			def cmp(str1: str, str2: str):
 				if regex: return re.search(str1, str2)

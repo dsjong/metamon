@@ -116,9 +116,44 @@ async def translate(ctx, arg, *, args):
 @bot.command()
 async def regex(ctx, args):
 	poke_id = row_from(["name.en"], args, True)
-	if poke_id == -1:
+	if(poke_id == -1):
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
 		return
-	await ctx.send(''.join(row_to(["name.en"], poke_id)))
+	msg = await ctx.send(''.join(row_to(["name.en"], poke_id)))
+	await msg.add_reaction('◀️')
+	await msg.add_reaction('▶️')
+	
+	def check(reaction, user):
+		return str(reaction.emoji) in ['◀️', '▶️'] and reaction.message == msg and user==ctx.author
+
+	while True:
+		reaction, user = await bot.wait_for('reaction_add', check=check)
+		if (str(reaction.emoji)[0] == '▶'):
+			tmp = row_from(["name.en"], args, True, poke_id+1, 1)
+			if(tmp != -1):
+				poke_id = tmp
+				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
+		else:
+			tmp = row_from(["name.en"], args, True, poke_id-1, -1)
+			if(tmp != -1):
+				poke_id = tmp
+				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
+'''
+@bot.event
+async def on_message(message):
+	if message.content.startswith('$thumb'):
+		channel = message.channel
+		msg = await channel.send('Send me that 👍 reaction, mate')
+
+		def check(reaction, user):
+			return user == message.author and str(reaction.emoji) == '👍' and reaction.message == msg
+
+		try:
+			reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
+		except asyncio.TimeoutError:
+			await channel.send('👎')
+		else:
+			await channel.send('👍')
+'''
 
 bot.run(os.environ['TOKEN'])
