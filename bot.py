@@ -124,7 +124,7 @@ async def regex(ctx, *, args):
 	await msg.add_reaction('▶️')
 	
 	def check(reaction, user):
-		return str(reaction.emoji) in ['◀️', '▶️'] and reaction.message == msg and user==ctx.author
+		return str(reaction.emoji) in ['◀️', '▶️'] and reaction.message == msg and user == ctx.author
 
 	while True:
 		reaction, user = await bot.wait_for('reaction_add', check=check)
@@ -149,22 +149,5 @@ async def servers(ctx):
 	servers = list(bot.guilds)
 	await ctx.send(f"Connected on {len(servers)} servers:")
 	await ctx.send('\n'.join(server.name for server in servers))
-'''
-@bot.event
-async def on_message(message):
-	if message.content.startswith('$thumb'):
-		channel = message.channel
-		msg = await channel.send('Send me that 👍 reaction, mate')
-
-		def check(reaction, user):
-			return user == message.author and str(reaction.emoji) == '👍' and reaction.message == msg
-
-		try:
-			reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
-		except asyncio.TimeoutError:
-			await channel.send('👎')
-		else:
-			await channel.send('👍')
-'''
 
 bot.run(os.environ['TOKEN'])
