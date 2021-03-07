@@ -147,7 +147,7 @@ async def hint(ctx, *, args):
 @bot.command()
 async def servers(ctx):
 	servers = list(bot.guilds)
-	await ctx.send(f"Connected on {str(len(servers))} servers:")
+	await ctx.send(f"Connected on {len(servers)} servers:")
 	await ctx.send('\n'.join(server.name for server in servers))
 '''
 @bot.event
