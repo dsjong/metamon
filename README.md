@@ -11,6 +11,7 @@ Features to implement:
 - analysis [pokemon]: links Smogon analysis with sets
 - compare [pokemon 1, pokemon2]: side by side analysis of base stats
 - evo [pokemon]: lists evolutions/preevolutions of pokemon
+- add left/right emotes to regex
 
 Stuff to do
 

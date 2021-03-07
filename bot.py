@@ -93,6 +93,8 @@ async def stats(ctx, *, args):
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
 		return
 	base_stats = row_to(stat_cols, poke_id)
+	#dex, name = row_to([dex_number, name.en], poke_id)
+	#embed = discord.Embed(title=f"#{dex} {name}")
 	await ctx.send(
 		f"HP: {base_stats[0]}\n" +
 		f"ATK: {base_stats[1]}\n" +
