@@ -12,6 +12,7 @@ Features to implement:
 - compare [pokemon 1, pokemon2]: side by side analysis of base stats
 - evo [pokemon]: lists evolutions/preevolutions of pokemon
 - add left/right emotes to regex
+- make regex2: regex directly from hint blanks
 
 Stuff to do
 
