@@ -14,10 +14,11 @@ def get_data_from(filename):
 	path = Path(__file__).parent / "data" / filename
 	with open(path) as f:
 		reader = csv.DictReader(f)
-		data = list({k: int(v) if isnumber(v) else v for k, v in row.items() if v!=""} for row in reader)
+		data = [None] + list({k: int(v) if isnumber(v) else v for k, v in row.items() if v!=""} for row in reader)
 	return data
 
-def row_from(cols: List[str], value, regex=False, start=0, jump=1):
+# ----------pokemon.csv----------
+def row_from(cols: List[str], value, regex=False, start=1, jump=1):
 	file = get_data_from("pokemon.csv")
 	for i in range(start, len(file) if jump==1 else -1, jump):
 		for j in cols:

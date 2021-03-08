@@ -27,9 +27,16 @@ async def ping(ctx):
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
 
-name_cols = ["slug", "name.ja", "name.ja_r", "name.ja_t", "name.en", "name.de", "name.fr"]
-type_cols = ["type.0", "type.1"]
-stat_cols = ["base.hp", "base.atk", "base.def", "base.satk", "base.sdef", "base.spd"]
+
+@bot.command()
+async def servers(ctx):
+	servers = list(bot.guilds)
+	await ctx.send(f"Connected on {len(servers)} servers:")
+	await ctx.send('\n'.join(server.name for server in servers))
+
+@bot.command()
+async def github(ctx):
+	await ctx.send("https://github.com/dsjong/metamon")
 
 @bot.command(aliases=["weak"])
 async def weakness(ctx, *, args):
@@ -144,10 +151,33 @@ async def hint(ctx, *, args):
 	args = ''.join(['^', args.replace('_', '.'), '$'])
 	await ctx.invoke(bot.get_command('regex'), args=args)
 
-@bot.command()
-async def servers(ctx):
-	servers = list(bot.guilds)
-	await ctx.send(f"Connected on {len(servers)} servers:")
-	await ctx.send('\n'.join(server.name for server in servers))
+@bot.command(aliases=["evo"])
+async def evolutions(ctx, *, args):
+	poke_id = row_from(name_cols, args)
+	if poke_id == -1:
+		await ctx.send(f"Could not find a pokemon matching `{args}`")
+		return
+
+	vis = {poke_id: 4}
+	def dfs(x):
+		for y in [int(t) for t in str((row_to(["evo.to"], x)+[-1])[0]).split()]:
+			if y in vis or y == -1: continue
+			vis[y] = vis[x]+1
+			dfs(y)
+		for y in [int(t) for t in str((row_to(["evo.from"], x)+[-1])[0]).split()]:
+			if y in vis or y == -1: continue
+			vis[y] = vis[x]-1
+			dfs(y)
+
+	dfs(poke_id)
+
+	embed=discord.Embed(title="Evolution Family")
+	cnt = 1
+	for stage in range(1, 10):
+		gen = [''.join(row_to(["name.en"], x))  for x in vis if vis[x] == stage]
+		if gen:
+			embed.add_field(name=f"Stage {cnt}", value="\n".join(gen), inline=True)
+			cnt += 1
+	await ctx.send(embed=embed)
 
 bot.run(os.environ['TOKEN'])
