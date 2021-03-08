@@ -67,3 +67,4 @@ TYPES = [
 name_cols = ["slug", "name.ja", "name.ja_r", "name.ja_t", "name.en", "name.de", "name.fr"]
 type_cols = ["type.0", "type.1"]
 stat_cols = ["base.hp", "base.atk", "base.def", "base.satk", "base.sdef", "base.spd"]
+mega_cols = ["evo.mega", "evo.mega_x", "evo.mega_y"]

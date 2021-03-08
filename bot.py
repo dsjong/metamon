@@ -173,11 +173,28 @@ async def evolutions(ctx, *, args):
 
 	embed=discord.Embed(title="Evolution Family")
 	cnt = 1
+	def megas(x: int):
+		exists = [bool(str(x)) for x in row_to(mega_cols, x)] + [0, 0]
+		if sum(exists) == 0: return ''
+		ans = ' ('
+		if exists[0]: ans += "Mega"
+		if exists[1]: ans += "Mega X, Y"
+		ans += ')'
+		return ans
+
 	for stage in range(1, 10):
-		gen = [''.join(row_to(["name.en"], x))  for x in vis if vis[x] == stage]
+		gen = [''.join(row_to(["name.en"], x)) for x in vis if vis[x] == stage]
+		mega = [megas(x) for x in vis if vis[x] == stage]
+		gen_mega = [''.join(x) for x in zip(gen, mega)]
 		if gen:
-			embed.add_field(name=f"Stage {cnt}", value="\n".join(gen), inline=True)
+			embed.add_field(name=f"Stage {cnt}", value="\n".join(gen_mega), inline=True)
 			cnt += 1
 	await ctx.send(embed=embed)
 
+#----------construction----------
+'''
+@bot.command(aliases=["bulb"])
+async def bulbapedia(ctx, *, args):
+	await ctx.send(f"https://bulbapedia.bulbagarden.net/wiki/{args.replace(' ', '_')}_(Pok%C3%A9mon)")
+'''
 bot.run(os.environ['TOKEN'])
