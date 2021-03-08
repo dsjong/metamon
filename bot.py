@@ -100,17 +100,30 @@ async def stats(ctx, *, args):
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
 		return
 	base_stats = row_to(stat_cols, poke_id)
-	#dex, name = row_to([dex_number, name.en], poke_id)
-	#embed = discord.Embed(title=f"#{dex} {name}")
-	await ctx.send(
-		f"HP: {base_stats[0]}\n" +
-		f"ATK: {base_stats[1]}\n" +
-		f"DEF: {base_stats[2]}\n" +
-		f"SATK: {base_stats[3]}\n" +
-		f"SDEF: {base_stats[4]}\n" +
-		f"SPD: {base_stats[5]}\n" +
-		f"**Total: {sum(base_stats)}**\n"
-	)
+	dex, name = row_to(["dex_number", "name.en"], poke_id)
+
+	bars = 14
+	def field(stat):
+		ret = [' ' for _ in range(3-len(stat))] + [stat]
+		return ''.join(ret)
+
+	def bar(stat: int):
+		ret = ["```cpp\n", field(str(stat)), " "]
+		fill = (stat*bars+254)//255
+		blank = bars - fill
+		ret += ["█" for _ in range(fill)]
+		ret += [" " for _ in range(blank)]
+		ret += "```"
+		return ''.join(ret)
+	embed = discord.Embed(title=f"#{dex} {name}")
+	embed.add_field(name="HP", value=bar(base_stats[0]), inline=True)
+	embed.add_field(name="ATK", value=bar(base_stats[1]), inline=True)
+	embed.add_field(name="DEF", value=bar(base_stats[2]), inline=True)
+	embed.add_field(name="SATK", value=bar(base_stats[3]), inline=True)
+	embed.add_field(name="SDEF", value=bar(base_stats[4]), inline=True)
+	embed.add_field(name="SPD", value=bar(base_stats[5]), inline=True)
+	embed.add_field(name=f"Base Stat Total: {sum(base_stats)}", value=f"[Other Pokemon with this total](https://bulbapedia.bulbagarden.net/wiki/Category:Pokémon_with_a_base_stat_total_of_{sum(base_stats)})", inline=False)
+	await ctx.send(embed=embed)
 
 @bot.command()
 async def translate(ctx, arg, *, args):
