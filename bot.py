@@ -174,7 +174,7 @@ async def evolutions(ctx, *, args):
 	embed=discord.Embed(title="Evolution Family")
 	cnt = 1
 	def megas(x: int):
-		exists = [True for x in row_to(mega_cols, x)] + [False, False]
+		exists = [True for _ in row_to(mega_cols, x)] + [False, False]
 		if sum(exists) == 0: return ''
 		ans = ' (Mega'
 		if row_to(mega_cols[1:2], x): ans += " X, Y"
