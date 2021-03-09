@@ -59,8 +59,8 @@ async def transform(ctx, *, args):
 	if poke_id == -1:
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
 		return
-	pfp = open(Path(__file__).parent / "data" / "images" / f"{poke_id}.png", 'rb').read()
-	name = row_to(["name.en"], poke_id)[0]
+	real_id, name = row_to(["id", "name.en"], poke_id)
+	pfp = open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb').read()
 	await ctx.send(f"Ditto transformed into {name}!")
 	await bot.user.edit(avatar=pfp)
 	await ctx.send("<:reimuhoi:693432187176878131>")
