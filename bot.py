@@ -11,8 +11,11 @@ load_dotenv('.env')
 
 bot = commands.Bot(command_prefix='p!')
 
+#----------Bot-related commands----------
 @bot.event
 async def on_ready():
+	global transformed
+	transformed = False
 	print('Logged in as')
 	print(bot.user.name)
 	print(bot.user.id)
@@ -37,6 +40,29 @@ async def servers(ctx):
 @bot.command()
 async def github(ctx):
 	await ctx.send("https://github.com/dsjong/metamon")
+
+@bot.command()
+async def transform(ctx, *, args):
+	global transformed
+	if transformed:
+		await ctx.send("Ditto is still transformed!")
+		return
+	poke_id = row_from(name_cols, args)
+	if poke_id == -1:
+		await ctx.send(f"Could not find a pokemon matching `{args}`")
+		return
+	pfp = open(Path(__file__).parent / "images" / f"{poke_id}.png", 'rb').read()
+	name = row_to(["name.en"], poke_id)[0]
+	await ctx.send(f"Ditto transformed into {name}!")
+	await bot.user.edit(avatar=pfp)
+	await ctx.send("<:reimuhoi:693432187176878131>")
+	transformed = True
+	await asyncio.sleep(700)
+	transformed = False
+	pfp = open(Path(__file__).parent / "images" / "132.png", 'rb').read()
+	await bot.user.edit(avatar=pfp)
+
+#----------Pokemon info commands----------
 
 @bot.command(aliases=["weak"])
 async def weakness(ctx, *, args):
