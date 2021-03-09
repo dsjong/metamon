@@ -122,7 +122,7 @@ async def stats(ctx, *, args):
 	embed.add_field(name="SATK", value=bar(base_stats[3]), inline=True)
 	embed.add_field(name="SDEF", value=bar(base_stats[4]), inline=True)
 	embed.add_field(name="SPD", value=bar(base_stats[5]), inline=True)
-	embed.add_field(name=f"Base Stat Total: {sum(base_stats)}", value=f"[Other Pokemon with this total](https://bulbapedia.bulbagarden.net/wiki/Category:Pokémon_with_a_base_stat_total_of_{sum(base_stats)})", inline=False)
+	embed.add_field(name=f"Base Stat Total: {sum(base_stats)}", value=f"[Other Pokémon with this total](https://bulbapedia.bulbagarden.net/wiki/Category:Pokémon_with_a_base_stat_total_of_{sum(base_stats)})", inline=False)
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -153,7 +153,9 @@ async def regex(ctx, *, args):
 			if(tmp != -1):
 				poke_id = tmp
 				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
+			await msg.remove_reaction(reaction, user)
 		else:
+			await msg.remove_reaction(reaction, user)
 			tmp = row_from(["name.en"], args, True, poke_id-1, -1)
 			if(tmp != -1):
 				poke_id = tmp
