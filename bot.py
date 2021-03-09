@@ -14,6 +14,7 @@ bot = commands.Bot(command_prefix='p!')
 #----------Bot-related commands----------
 @bot.event
 async def on_ready():
+	path = Path(__file__).parent
 	print([f.path for f in os.scandir(path) if f.is_dir()])
 	global transformed
 	transformed = False
