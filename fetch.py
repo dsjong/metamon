@@ -20,7 +20,7 @@ def get_data_from(filename):
 # ----------pokemon.csv----------
 def row_from(cols: List[str], value, regex=False, start=1, jump=1):
 	file = get_data_from("pokemon.csv")
-	for i in range(start, len(file)+1 if jump==1 else 0, jump):
+	for i in range(start, len(file) if jump==1 else 0, jump):
 		for j in cols:
 			def cmp(str1: str, str2: str):
 				if regex: return re.search(str1, str2)
