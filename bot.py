@@ -149,11 +149,11 @@ async def regex(ctx, *, args):
 	while True:
 		reaction, user = await bot.wait_for('reaction_add', check=check)
 		if (str(reaction.emoji)[0] == '▶'):
+			await msg.remove_reaction(reaction, user)
 			tmp = row_from(["name.en"], args, True, poke_id+1, 1)
 			if(tmp != -1):
 				poke_id = tmp
 				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
-			await msg.remove_reaction(reaction, user)
 		else:
 			await msg.remove_reaction(reaction, user)
 			tmp = row_from(["name.en"], args, True, poke_id-1, -1)
