@@ -61,13 +61,13 @@ async def transform(ctx, *, args):
 		return
 	real_id, name = row_to(["id", "name.en"], poke_id)
 	pfp = open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb').read()
-	await ctx.send(f"Ditto transformed into {name}!")
 	await bot.user.edit(avatar=pfp)
-	await ctx.send("<:reimuhoi:693432187176878131>")
+	await ctx.send(f"Ditto transformed into {name}!")
 	transformed = True
 	await asyncio.sleep(700)
 	transformed = False
-	pfp = open(Path(__file__).parent / "images" / "132.png", 'rb').read()
+	pfp = open(Path(__file__).parent / "data" / "images" / f"132.png", 'rb').read()
+	await ctx.send(f"Ditto went back to its original form...")
 	await bot.user.edit(avatar=pfp)
 
 #----------Pokemon info commands----------
