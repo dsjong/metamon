@@ -14,12 +14,6 @@ bot = commands.Bot(command_prefix='p!')
 #----------Bot-related commands----------
 @bot.event
 async def on_ready():
-	path = Path(__file__).parent
-	print([f.path for f in os.scandir(path)])
-	path = Path(__file__).parent / "data"
-	print([f.path for f in os.scandir(path)])
-	path = Path(__file__).parent / "data" / "csv"
-	print([f.path for f in os.scandir(path)])
 	global transformed
 	transformed = False
 	print('Logged in as')
@@ -32,10 +26,18 @@ async def on_ready():
 		await asyncio.sleep(300)
 
 @bot.command()
+async def debug(ctx):
+	path = Path(__file__).parent
+	print([f.path for f in os.scandir(path)])
+	path = Path(__file__).parent / "data"
+	print([f.path for f in os.scandir(path)])
+	path = Path(__file__).parent / "data" / "csv"
+	print([f.path for f in os.scandir(path)])
+
+@bot.command()
 async def ping(ctx):
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
-
 
 @bot.command()
 async def servers(ctx):
