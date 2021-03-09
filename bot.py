@@ -16,6 +16,8 @@ bot = commands.Bot(command_prefix='p!')
 async def on_ready():
 	path = Path(__file__).parent
 	print([f.path for f in os.scandir(path)])
+	path = Path(__file__).parent / "data"
+	print([f.path for f in os.scandir(path)])
 	path = Path(__file__).parent / "data" / "csv"
 	print([f.path for f in os.scandir(path)])
 	global transformed
