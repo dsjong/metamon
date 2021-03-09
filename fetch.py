@@ -11,7 +11,7 @@ def isnumber(v):
 	return True
 
 def get_data_from(filename):
-	path = Path(__file__).parent / "data" / filename
+	path = Path(__file__).parent / "data" / "csv" / filename
 	with open(path) as f:
 		reader = csv.DictReader(f)
 		data = [None] + list({k: int(v) if isnumber(v) else v for k, v in row.items() if v!=""} for row in reader)
