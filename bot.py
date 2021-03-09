@@ -15,7 +15,9 @@ bot = commands.Bot(command_prefix='p!')
 @bot.event
 async def on_ready():
 	path = Path(__file__).parent
-	print([f.path for f in os.scandir(path) if f.is_dir()])
+	print([f.path for f in os.scandir(path)])
+	path = Path(__file__).parent / "data" / "csv"
+	print([f.path for f in os.scandir(path)])
 	global transformed
 	transformed = False
 	print('Logged in as')
