@@ -3,6 +3,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import os
 import asyncio
+from time import time
 from itertools import cycle
 from fetch import *
 from constants import *
@@ -14,8 +15,8 @@ bot = commands.Bot(command_prefix='p!')
 #----------Bot-related commands----------
 @bot.event
 async def on_ready():
-	global transformed
-	transformed = False
+	global transform_time
+	transform_time = -1
 	print('Logged in as')
 	print(bot.user.name)
 	print(bot.user.id)
@@ -51,9 +52,9 @@ async def github(ctx):
 
 @bot.command()
 async def transform(ctx, *, args):
-	global transformed
-	if transformed:
-		await ctx.send("Ditto is still transformed!")
+	global transform_time
+	if transform_time != -1:
+		await ctx.send(f"Ditto is still transformed! `{700 - round(time() - transform_time)}` seconds till revert.")
 		return
 	poke_id = row_from(name_cols, args)
 	if poke_id == -1:
@@ -63,9 +64,9 @@ async def transform(ctx, *, args):
 	pfp = open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb').read()
 	await bot.user.edit(avatar=pfp)
 	await ctx.send(f"Ditto transformed into {name}!")
-	transformed = True
+	transform_time = time()
 	await asyncio.sleep(700)
-	transformed = False
+	transform_time = -1
 	pfp = open(Path(__file__).parent / "data" / "images" / f"132.png", 'rb').read()
 	await ctx.send(f"Ditto went back to its original form...")
 	await bot.user.edit(avatar=pfp)
