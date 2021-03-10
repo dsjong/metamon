@@ -13,7 +13,7 @@ def from_args(func):
 	async def wrapper(*args, **kwargs):
 		ctx = args[0]
 		if kwargs["args"] == None:
-			ctx.send("No arguments supplied!")
+			await ctx.send("No arguments supplied!")
 			return
 		poke_id = row_from(name_cols, kwargs["args"])
 		if poke_id == -1:

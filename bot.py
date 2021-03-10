@@ -43,7 +43,7 @@ async def github(ctx):
 
 @bot.command()
 @from_args
-async def transform(ctx, *, args):
+async def transform(ctx, *, args = None):
 	global transform_time
 	if transform_time != -1:
 		await ctx.send(f"Ditto is still transformed! `{600 - round(time() - transform_time)}` seconds until revert.")
@@ -111,13 +111,13 @@ async def coverage(ctx, *, args):
 
 @bot.command()
 @from_args
-async def type(ctx, *, args):
+async def type(ctx, *, args = None):
 	poke_id = args
 	await ctx.send(', '.join(row_to(type_cols, poke_id)))
 
 @bot.command()
 @from_args
-async def stats(ctx, *, args):
+async def stats(ctx, *, args = None):
 	poke_id = args
 	base_stats = row_to(stat_cols, poke_id)
 	stat_names = ["HP", "ATK", "DEF", "SATK", "SDEF", "SPD"]
@@ -143,7 +143,7 @@ async def stats(ctx, *, args):
 
 @bot.command()
 @from_args
-async def translate(ctx, arg, *, args):
+async def translate(ctx, arg, *, args = None):
 	poke_id = args
 	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
 
@@ -182,7 +182,7 @@ async def hint(ctx, *, args):
 
 @bot.command(aliases=["evo"])
 @from_args
-async def evolutions(ctx, *, args):
+async def evolutions(ctx, *, args = None):
 	poke_id = args
 	vis = {poke_id: 4}
 	def dfs(x):
