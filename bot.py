@@ -146,7 +146,7 @@ async def stats(ctx, *, args):
 		ret = ["```cpp\n", field(str(stat)), " "]
 		fill = (stat*bars+254)//255
 		blank = bars - fill
-		ret += ["█" for _ in range(fill)]
+		ret += ["▓" for _ in range(fill)]
 		ret += [" " for _ in range(blank)]
 		ret += "```"
 		return ''.join(ret)
