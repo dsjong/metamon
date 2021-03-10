@@ -4,6 +4,21 @@ from pathlib import Path
 from typing import List
 import constants
 import re
+import inspect
+import constants
+
+
+#----------decorators----------
+def from_names(func):
+	async def wrapper(ctx, *, args):
+		poke_id = row_from(name_cols, args)
+		if poke_id == -1:
+			await ctx.send(f"Could not find a pokemon matching `{args}`")
+			return
+		await func(ctx, args=poke_id)
+	wrapper.__name__ = func.__name__
+	wrapper.__signature__ = inspect.signature(func)
+	return wrapper
 
 def isnumber(v):
 	try: int(v)
@@ -17,7 +32,7 @@ def get_data_from(filename):
 		data = [None] + list({k: int(v) if isnumber(v) else v for k, v in row.items() if v!=""} for row in reader)
 	return data
 
-# ----------pokemon.csv----------
+#----------pokemon.csv----------
 def row_from(cols: List[str], value, regex=False, start=1, jump=1):
 	file = get_data_from("pokemon.csv")
 	for i in range(start, len(file) if jump==1 else 0, jump):
@@ -32,4 +47,3 @@ def row_to(cols: List[str], row):
 	if(row == -1): return []
 	file = get_data_from("pokemon.csv")
 	return [value for value in (file[row].get(x, None) for x in cols) if value != None]
-	

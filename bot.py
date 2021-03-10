@@ -51,15 +51,13 @@ async def github(ctx):
 	await ctx.send("https://github.com/dsjong/metamon")
 
 @bot.command()
+@from_names
 async def transform(ctx, *, args):
 	global transform_time
 	if transform_time != -1:
 		await ctx.send(f"Ditto is still transformed! `{600 - round(time() - transform_time)}` seconds until revert.")
 		return
-	poke_id = row_from(name_cols, args)
-	if poke_id == -1:
-		await ctx.send(f"Could not find a pokemon matching `{args}`")
-		return
+	poke_id = args
 	real_id, name = row_to(["id", "name.en"], poke_id)
 	pfp = open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb').read()
 	await bot.user.edit(avatar=pfp)
@@ -121,19 +119,15 @@ async def coverage(ctx, *, args):
 	)
 
 @bot.command()
+@from_names
 async def type(ctx, *, args):
-	poke_id = row_from(name_cols, args)
-	if poke_id == -1:
-		await ctx.send(f"Could not find a pokemon matching `{args}`")
-		return
-	else: await ctx.send(', '.join(row_to(type_cols, poke_id)))
+	poke_id = args
+	await ctx.send(', '.join(row_to(type_cols, poke_id)))
 
 @bot.command()
+@from_names
 async def stats(ctx, *, args):
-	poke_id = row_from(name_cols, args)
-	if poke_id == -1:
-		await ctx.send(f"Could not find a pokemon matching `{args}`")
-		return
+	poke_id = args
 	base_stats = row_to(stat_cols, poke_id)
 	dex, name = row_to(["dex_number", "name.en"], poke_id)
 
@@ -146,7 +140,7 @@ async def stats(ctx, *, args):
 		ret = ["```cpp\n", field(str(stat)), " "]
 		fill = (stat*bars+254)//255
 		blank = bars - fill
-		ret += ["▓" for _ in range(fill)]
+		ret += ["█" for _ in range(fill)]
 		ret += [" " for _ in range(blank)]
 		ret += "```"
 		return ''.join(ret)
@@ -161,11 +155,9 @@ async def stats(ctx, *, args):
 	await ctx.send(embed=embed)
 
 @bot.command()
+@from_names
 async def translate(ctx, arg, *, args):
-	poke_id = row_from(name_cols, args)
-	if poke_id == -1:
-		await ctx.send(f"Could not find a pokemon matching `{args}`")
-		return
+	poke_id = args
 	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
 
 @bot.command()
@@ -202,12 +194,9 @@ async def hint(ctx, *, args):
 	await ctx.invoke(bot.get_command('regex'), args=args)
 
 @bot.command(aliases=["evo"])
+@from_names
 async def evolutions(ctx, *, args):
-	poke_id = row_from(name_cols, args)
-	if poke_id == -1:
-		await ctx.send(f"Could not find a pokemon matching `{args}`")
-		return
-
+	poke_id = args
 	vis = {poke_id: 4}
 	def dfs(x):
 		for y in [int(t) for t in str((row_to(["evo.to"], x)+[-1])[0]).split()]:
