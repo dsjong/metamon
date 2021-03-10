@@ -54,7 +54,7 @@ async def github(ctx):
 async def transform(ctx, *, args):
 	global transform_time
 	if transform_time != -1:
-		await ctx.send(f"Ditto is still transformed! `{700 - round(time() - transform_time)}` seconds till revert.")
+		await ctx.send(f"Ditto is still transformed! `{600 - round(time() - transform_time)}` seconds until revert.")
 		return
 	poke_id = row_from(name_cols, args)
 	if poke_id == -1:
@@ -65,7 +65,7 @@ async def transform(ctx, *, args):
 	await bot.user.edit(avatar=pfp)
 	await ctx.send(f"Ditto transformed into {name}!")
 	transform_time = time()
-	await asyncio.sleep(700)
+	await asyncio.sleep(600)
 	transform_time = -1
 	pfp = open(Path(__file__).parent / "data" / "images" / f"132.png", 'rb').read()
 	await ctx.send(f"Ditto went back to its original form...")
