@@ -27,15 +27,6 @@ async def on_ready():
 		await asyncio.sleep(300)
 
 @bot.command()
-async def debug(ctx):
-	path = Path(__file__).parent
-	print([f.path for f in os.scandir(path)])
-	path = Path(__file__).parent / "data"
-	print([f.path for f in os.scandir(path)])
-	path = Path(__file__).parent / "data" / "csv"
-	print([f.path for f in os.scandir(path)])
-
-@bot.command()
 async def ping(ctx):
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
@@ -51,7 +42,7 @@ async def github(ctx):
 	await ctx.send("https://github.com/dsjong/metamon")
 
 @bot.command()
-@from_names
+@from_args
 async def transform(ctx, *, args):
 	global transform_time
 	if transform_time != -1:
@@ -119,25 +110,25 @@ async def coverage(ctx, *, args):
 	)
 
 @bot.command()
-@from_names
+@from_args
 async def type(ctx, *, args):
 	poke_id = args
 	await ctx.send(', '.join(row_to(type_cols, poke_id)))
 
 @bot.command()
-@from_names
+@from_args
 async def stats(ctx, *, args):
 	poke_id = args
 	base_stats = row_to(stat_cols, poke_id)
+	stat_names = ["HP", "ATK", "DEF", "SATK", "SDEF", "SPD"]
 	dex, name = row_to(["dex_number", "name.en"], poke_id)
-
 	bars = 14
 	def field(stat):
 		ret = [' ' for _ in range(3-len(stat))] + [stat]
 		return ''.join(ret)
 
 	def bar(stat: int):
-		ret = ["```cpp\n", field(str(stat)), " "]
+		ret = ["```yaml\n", field(str(stat)), " "]
 		fill = (stat*bars+254)//255
 		blank = bars - fill
 		ret += ["█" for _ in range(fill)]
@@ -145,17 +136,13 @@ async def stats(ctx, *, args):
 		ret += "```"
 		return ''.join(ret)
 	embed = discord.Embed(title=f"#{dex} {name}")
-	embed.add_field(name="HP", value=bar(base_stats[0]), inline=True)
-	embed.add_field(name="ATK", value=bar(base_stats[1]), inline=True)
-	embed.add_field(name="DEF", value=bar(base_stats[2]), inline=True)
-	embed.add_field(name="SATK", value=bar(base_stats[3]), inline=True)
-	embed.add_field(name="SDEF", value=bar(base_stats[4]), inline=True)
-	embed.add_field(name="SPD", value=bar(base_stats[5]), inline=True)
+	for i in range(6):
+		embed.add_field(name=stat_names[i], value=bar(base_stats[i]), inline=True)
 	embed.add_field(name=f"Base Stat Total: {sum(base_stats)}", value=f"[Other Pokémon with this total](https://bulbapedia.bulbagarden.net/wiki/Category:Pokémon_with_a_base_stat_total_of_{sum(base_stats)})", inline=False)
 	await ctx.send(embed=embed)
 
 @bot.command()
-@from_names
+@from_args
 async def translate(ctx, arg, *, args):
 	poke_id = args
 	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
@@ -194,7 +181,7 @@ async def hint(ctx, *, args):
 	await ctx.invoke(bot.get_command('regex'), args=args)
 
 @bot.command(aliases=["evo"])
-@from_names
+@from_args
 async def evolutions(ctx, *, args):
 	poke_id = args
 	vis = {poke_id: 4}

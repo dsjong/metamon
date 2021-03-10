@@ -5,17 +5,21 @@ from typing import List
 import constants
 import re
 import inspect
-import constants
+from constants import *
 
 
 #----------decorators----------
-def from_names(func):
-	async def wrapper(ctx, *, args):
-		poke_id = row_from(name_cols, args)
-		if poke_id == -1:
-			await ctx.send(f"Could not find a pokemon matching `{args}`")
+def from_args(func):
+	async def wrapper(*args, **kwargs):
+		ctx = args[0]
+		if kwargs["args"] == None:
+			ctx.send("No arguments supplied!")
 			return
-		await func(ctx, args=poke_id)
+		poke_id = row_from(name_cols, kwargs["args"])
+		if poke_id == -1:
+			await args[0].send(f"Could not find a pokemon matching `{kwargs['args']}`")
+			return
+		await func(*args, args=poke_id)
 	wrapper.__name__ = func.__name__
 	wrapper.__signature__ = inspect.signature(func)
 	return wrapper
