@@ -53,15 +53,16 @@ async def transform(ctx, *, args = None):
 	if name == "Bruxish":
 		await ctx.send("Come on now. Really?")
 		return
-	pfp = open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb').read()
-	await bot.user.edit(avatar=pfp)
-	await ctx.send(f"Ditto transformed into {name}!")
-	transform_time = time()
-	await asyncio.sleep(600)
-	transform_time = -1
-	pfp = open(Path(__file__).parent / "data" / "images" / f"132.png", 'rb').read()
-	await ctx.send(f"Ditto went back to its original form...")
-	await bot.user.edit(avatar=pfp)
+	with open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb') as img:
+		pfp = img.read()
+		await bot.user.edit(avatar=pfp)
+		await ctx.send(f"Ditto transformed into {name}!")
+		transform_time = time()
+		await asyncio.sleep(600)
+		transform_time = -1
+		pfp = open(Path(__file__).parent / "data" / "images" / f"132.png", 'rb').read()
+		await bot.user.edit(avatar=pfp)
+		await ctx.send(f"Ditto went back to its original form...")
 
 #----------Pokemon info commands----------
 
