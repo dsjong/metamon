@@ -50,6 +50,9 @@ async def transform(ctx, *, args = None):
 		return
 	poke_id = args
 	real_id, name = row_to(["id", "name.en"], poke_id)
+	if name == "Bruxish":
+		await ctx.send("Come on now. Really?")
+		return
 	pfp = open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb').read()
 	await bot.user.edit(avatar=pfp)
 	await ctx.send(f"Ditto transformed into {name}!")
@@ -215,6 +218,14 @@ async def evolutions(ctx, *, args = None):
 			embed.add_field(name=f"Stage {cnt}", value="\n".join(gen_mega), inline=True)
 			cnt += 1
 	await ctx.send(embed=embed)
+
+@bot.command(aliases=["img"])
+@from_args
+async def image(ctx, *, args = None):
+	poke_id = args
+	real_id = row_to(["id", "name.en"], poke_id)[0]
+	with open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb') as img:
+		await ctx.send(file=discord.File(img))
 
 #----------construction----------
 '''
