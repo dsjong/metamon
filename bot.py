@@ -48,12 +48,12 @@ async def transform(ctx, *, args=None):
 	if transform_time != -1:
 		await ctx.send(f"Ditto is still transformed! `{600 - round(time() - transform_time)}` seconds until revert.")
 		return
-	poke_id = args
+	poke_id, shiny = args
 	real_id, name = row_to(["id", "name.en"], poke_id)
 	if name == "Bruxish":
 		await ctx.send("Come on now. Really?")
 		return
-	with open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb') as img:
+	with open(Path(__file__).parent / "data" / "shiny" if shiny else "images" / f"{real_id}.png", 'rb') as img:
 		pfp = img.read()
 		await bot.user.edit(avatar=pfp)
 		await ctx.send(f"Ditto transformed into {name}!")
@@ -116,13 +116,13 @@ async def coverage(ctx, *, args):
 @bot.command(brief="Type of selected pokemon")
 @from_args
 async def type(ctx, *, args=None):
-	poke_id = args
+	poke_id, shiny = args
 	await ctx.send(', '.join(row_to(type_cols, poke_id)))
 
 @bot.command(brief="Base stats of selected pokemon")
 @from_args
 async def stats(ctx, *, args=None):
-	poke_id = args
+	poke_id, shiny = args
 	base_stats = row_to(stat_cols, poke_id)
 	stat_names = ["HP", "ATK", "DEF", "SATK", "SDEF", "SPD"]
 	dex, name = row_to(["dex_number", "name.en"], poke_id)
@@ -148,7 +148,7 @@ async def stats(ctx, *, args=None):
 @bot.command(brief="Translate a Pokemon name", help="Available languages: en, ja, ja_r, ja_t, de, fr")
 @from_args
 async def translate(ctx, arg, *, args=None):
-	poke_id = args
+	poke_id, shiny = args
 	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
 
 @bot.command(brief="Pokemon name at the tip of your tongue?")
@@ -187,7 +187,7 @@ async def hint(ctx, *, args):
 @bot.command(aliases=["evo"], brief="Evolution family of selected pokemon")
 @from_args
 async def evolutions(ctx, *, args=None):
-	poke_id = args
+	poke_id, shiny = args
 	vis = {poke_id: 4}
 	def dfs(x):
 		for y in [int(t) for t in str((row_to(["evo.to"], x)+[-1])[0]).split()]:
@@ -223,9 +223,9 @@ async def evolutions(ctx, *, args=None):
 @bot.command(aliases=["img"], brief="Image of selected pokemon")
 @from_args
 async def image(ctx, *, args=None):
-	poke_id = args
+	poke_id, shiny = args
 	real_id = row_to(["id", "name.en"], poke_id)[0]
-	with open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb') as img:
+	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{real_id}.png", 'rb') as img:
 		await ctx.send(file=discord.File(img))
 
 #----------construction----------

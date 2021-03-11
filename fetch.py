@@ -15,11 +15,15 @@ def from_args(func):
 		if kwargs["args"] == None:
 			await ctx.send("No arguments supplied!")
 			return
-		poke_id = row_from(name_cols, kwargs["args"])
+		poke_name, shiny = kwargs["args"].lower(), False
+		if poke_name.startswith("shiny"):
+			poke_name = poke_name[5:].strip()
+			shiny = True
+		poke_id = row_from(name_cols, poke_name)
 		if poke_id == -1:
 			await args[0].send(f"Could not find a pokemon matching `{kwargs['args']}`")
 			return
-		await func(*args, args=poke_id)
+		await func(*args, args=[poke_id, shiny])
 	wrapper.__name__ = func.__name__
 	wrapper.__signature__ = inspect.signature(func)
 	return wrapper
