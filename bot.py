@@ -26,24 +26,24 @@ async def on_ready():
 		await bot.change_presence(activity = discord_status)
 		await asyncio.sleep(300)
 
-@bot.command()
+@bot.command(brief="Play table tennis!")
 async def ping(ctx):
 	latency = round(bot.latency*1000)
 	await ctx.send('Pong! `{0} ms`'.format(latency))
 
-@bot.command()
+@bot.command(brief="List servers Metamon is in")
 async def servers(ctx):
 	servers = list(bot.guilds)
 	await ctx.send(f"Connected on {len(servers)} servers:")
 	await ctx.send('\n'.join(server.name for server in servers))
 
-@bot.command()
+@bot.command(brief="See my code 👀")
 async def github(ctx):
 	await ctx.send("https://github.com/dsjong/metamon")
 
-@bot.command()
+@bot.command(brief="Ask Metamon to transform!")
 @from_args
-async def transform(ctx, *, args = None):
+async def transform(ctx, *, args=None):
 	global transform_time
 	if transform_time != -1:
 		await ctx.send(f"Ditto is still transformed! `{600 - round(time() - transform_time)}` seconds until revert.")
@@ -66,7 +66,7 @@ async def transform(ctx, *, args = None):
 
 #----------Pokemon info commands----------
 
-@bot.command(aliases=["weak"])
+@bot.command(aliases=["weak"], brief="Type effectiveness of defending pokemon/type")
 async def weakness(ctx, *, args):
 	# args is either pokemon name or type
 	args = args[0].upper() + args[1:].lower()
@@ -90,7 +90,7 @@ async def weakness(ctx, *, args):
 		f"Immunities: {', '.join(immunities)}\n"
 	)
 
-@bot.command(aliases=["cover"])
+@bot.command(aliases=["cover"], brief="Type effectiveness of attacking type")
 async def coverage(ctx, *, args):
 	args = args[0].upper() + args[1:].lower()
 	types = []
@@ -113,15 +113,15 @@ async def coverage(ctx, *, args):
 		f"Immunities: {', '.join(immunities)}\n"
 	)
 
-@bot.command()
+@bot.command(brief="Type of selected pokemon")
 @from_args
-async def type(ctx, *, args = None):
+async def type(ctx, *, args=None):
 	poke_id = args
 	await ctx.send(', '.join(row_to(type_cols, poke_id)))
 
-@bot.command()
+@bot.command(brief="Base stats of selected pokemon")
 @from_args
-async def stats(ctx, *, args = None):
+async def stats(ctx, *, args=None):
 	poke_id = args
 	base_stats = row_to(stat_cols, poke_id)
 	stat_names = ["HP", "ATK", "DEF", "SATK", "SDEF", "SPD"]
@@ -145,13 +145,13 @@ async def stats(ctx, *, args = None):
 	embed.add_field(name=f"Base Stat Total: {sum(base_stats)}", value=f"[Other Pokémon with this total](https://bulbapedia.bulbagarden.net/wiki/Category:Pokémon_with_a_base_stat_total_of_{sum(base_stats)})", inline=False)
 	await ctx.send(embed=embed)
 
-@bot.command()
+@bot.command(brief="Translate a Pokemon name", help="Available languages: en, ja, ja_r, ja_t, de, fr")
 @from_args
-async def translate(ctx, arg, *, args = None):
+async def translate(ctx, arg, *, args=None):
 	poke_id = args
 	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
 
-@bot.command()
+@bot.command(brief="Pokemon name at the tip of your tongue?")
 async def regex(ctx, *, args):
 	poke_id = row_from(["name.en"], args, True)
 	if(poke_id == -1):
@@ -179,14 +179,14 @@ async def regex(ctx, *, args):
 				poke_id = tmp
 				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
 
-@bot.command()
+@bot.command(brief="Definitely not a Poketwo cheat...")
 async def hint(ctx, *, args):
 	args = ''.join(['^', args.replace('_', '.'), '$'])
 	await ctx.invoke(bot.get_command('regex'), args=args)
 
-@bot.command(aliases=["evo"])
+@bot.command(aliases=["evo"], brief="Evolution family of selected pokemon")
 @from_args
-async def evolutions(ctx, *, args = None):
+async def evolutions(ctx, *, args=None):
 	poke_id = args
 	vis = {poke_id: 4}
 	def dfs(x):
@@ -220,9 +220,9 @@ async def evolutions(ctx, *, args = None):
 			cnt += 1
 	await ctx.send(embed=embed)
 
-@bot.command(aliases=["img"])
+@bot.command(aliases=["img"], brief="Image of selected pokemon")
 @from_args
-async def image(ctx, *, args = None):
+async def image(ctx, *, args=None):
 	poke_id = args
 	real_id = row_to(["id", "name.en"], poke_id)[0]
 	with open(Path(__file__).parent / "data" / "images" / f"{real_id}.png", 'rb') as img:
