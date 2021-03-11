@@ -53,7 +53,7 @@ async def transform(ctx, *, args=None):
 	if name == "Bruxish":
 		await ctx.send("Come on now. Really?")
 		return
-	with open(Path(__file__).parent / "data" / "shiny" if shiny else "images" / f"{real_id}.png", 'rb') as img:
+	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{real_id}.png", 'rb') as img:
 		pfp = img.read()
 		await bot.user.edit(avatar=pfp)
 		await ctx.send(f"Ditto transformed into {name}!")
