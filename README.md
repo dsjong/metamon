@@ -5,15 +5,18 @@ A complementary bot for Pokétwo.
 
 ## Todo
 
-Features to implement:
+For Infobot:
 
 - statcalc [base, iv, level]: gives stat value given base stats, iv (out of 31), and level
 - analysis [pokemon]: links Smogon analysis with sets
 - compare [pokemon 1, pokemon2]: side by side analysis of base stats
 - implement bulb
-- transform: change pfp
 
-Stuff to do
+Roadmap
 
-- Sprites
-- Help function
+- Implement a pokemon inventory system (Mongo)
+- Implement spawning system
+	- Probability based on BST
+	- Random BS, IVs, Natures
+	- Non-goal: Levels (these will be fixed to ~50 or ~80, as in Showdown)
+- Implement battle system
