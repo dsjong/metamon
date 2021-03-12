@@ -19,11 +19,11 @@ def from_args(func):
 		if poke_name.startswith("shiny"):
 			poke_name = poke_name[5:].strip()
 			shiny = True
-		poke_id = row_from(name_cols, poke_name)
-		if poke_id == -1:
+		poke_row = row_from(name_cols, poke_name)
+		if poke_row == -1 or (not row_to(["enabled"], poke_row)):
 			await args[0].send(f"Could not find a pokemon matching `{kwargs['args']}`")
 			return
-		await func(*args, args=[poke_id, shiny])
+		await func(*args, args=[poke_row, shiny])
 	wrapper.__name__ = func.__name__
 	wrapper.__signature__ = inspect.signature(func)
 	return wrapper

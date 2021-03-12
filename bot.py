@@ -48,12 +48,12 @@ async def transform(ctx, *, args=None):
 	if transform_time != -1:
 		await ctx.send(f"Ditto is still transformed! `{600 - round(time() - transform_time)}` seconds until revert.")
 		return
-	poke_id, shiny = args
-	real_id, name = row_to(["id", "name.en"], poke_id)
+	poke_row, shiny = args
+	poke_id, name = row_to(["id", "name.en"], poke_row)
 	if name == "Bruxish":
 		await ctx.send("Come on now. Really?")
 		return
-	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{real_id}.png", 'rb') as img:
+	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{poke_id}.png", 'rb') as img:
 		pfp = img.read()
 		await bot.user.edit(avatar=pfp)
 		await ctx.send(f"Ditto transformed into {name}!")
@@ -116,16 +116,16 @@ async def coverage(ctx, *, args):
 @bot.command(brief="Type of selected pokemon")
 @from_args
 async def type(ctx, *, args=None):
-	poke_id, shiny = args
-	await ctx.send(', '.join(row_to(type_cols, poke_id)))
+	poke_row, shiny = args
+	await ctx.send(', '.join(row_to(type_cols, poke_row)))
 
 @bot.command(brief="Base stats of selected pokemon")
 @from_args
 async def stats(ctx, *, args=None):
-	poke_id, shiny = args
-	base_stats = row_to(stat_cols, poke_id)
+	poke_row, shiny = args
+	base_stats = row_to(stat_cols, poke_row)
 	stat_names = ["HP", "ATK", "DEF", "SATK", "SDEF", "SPD"]
-	dex, name = row_to(["dex_number", "name.en"], poke_id)
+	dex, name = row_to(["dex_number", "name.en"], poke_row)
 	bars = 14
 	def field(stat):
 		ret = [' ' for _ in range(3-len(stat))] + [stat]
@@ -148,16 +148,16 @@ async def stats(ctx, *, args=None):
 @bot.command(brief="Translate a Pokemon name", help="Available languages: en, ja, ja_r, ja_t, de, fr")
 @from_args
 async def translate(ctx, arg, *, args=None):
-	poke_id, shiny = args
-	await ctx.send(''.join(row_to(["name."+arg], poke_id)))
+	poke_row, shiny = args
+	await ctx.send(''.join(row_to(["name."+arg], poke_row)))
 
 @bot.command(brief="Pokemon name at the tip of your tongue?")
 async def regex(ctx, *, args):
-	poke_id = row_from(["name.en"], args, True)
-	if(poke_id == -1):
+	poke_row = row_from(["name.en"], args, True)
+	if(poke_row == -1):
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
 		return
-	msg = await ctx.send(''.join(row_to(["name.en"], poke_id)))
+	msg = await ctx.send(''.join(row_to(["name.en"], poke_row)))
 	await msg.add_reaction('◀️')
 	await msg.add_reaction('▶️')
 	
@@ -168,16 +168,16 @@ async def regex(ctx, *, args):
 		reaction, user = await bot.wait_for('reaction_add', check=check)
 		if (str(reaction.emoji)[0] == '▶'):
 			await msg.remove_reaction(reaction, user)
-			tmp = row_from(["name.en"], args, True, poke_id+1, 1)
+			tmp = row_from(["name.en"], args, True, poke_row+1, 1)
 			if(tmp != -1):
-				poke_id = tmp
-				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
+				poke_row = tmp
+				await msg.edit(content=''.join(row_to(["name.en"], poke_row)))
 		else:
 			await msg.remove_reaction(reaction, user)
-			tmp = row_from(["name.en"], args, True, poke_id-1, -1)
+			tmp = row_from(["name.en"], args, True, poke_row-1, -1)
 			if(tmp != -1):
-				poke_id = tmp
-				await msg.edit(content=''.join(row_to(["name.en"], poke_id)))
+				poke_row = tmp
+				await msg.edit(content=''.join(row_to(["name.en"], poke_row)))
 
 @bot.command(brief="Definitely not a Poketwo cheat...")
 async def hint(ctx, *, args):
@@ -187,8 +187,8 @@ async def hint(ctx, *, args):
 @bot.command(aliases=["evo"], brief="Evolution family of selected pokemon")
 @from_args
 async def evolutions(ctx, *, args=None):
-	poke_id, shiny = args
-	vis = {poke_id: 4}
+	poke_row, shiny = args
+	vis = {poke_row: 4}
 	def dfs(x):
 		for y in [int(t) for t in str((row_to(["evo.to"], x)+[-1])[0]).split()]:
 			if y in vis or y == -1: continue
@@ -199,7 +199,7 @@ async def evolutions(ctx, *, args=None):
 			vis[y] = vis[x]-1
 			dfs(y)
 
-	dfs(poke_id)
+	dfs(poke_row)
 
 	embed=discord.Embed(title="Evolution Family")
 	cnt = 1
@@ -223,9 +223,9 @@ async def evolutions(ctx, *, args=None):
 @bot.command(aliases=["img"], brief="Image of selected pokemon")
 @from_args
 async def image(ctx, *, args=None):
-	poke_id, shiny = args
-	real_id = row_to(["id", "name.en"], poke_id)[0]
-	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{real_id}.png", 'rb') as img:
+	poke_row, shiny = args
+	poke_id = row_to(["id", "name.en"], poke_row)[0]
+	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{poke_id}.png", 'rb') as img:
 		await ctx.send(file=discord.File(img))
 
 #----------construction----------
