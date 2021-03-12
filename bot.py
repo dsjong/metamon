@@ -152,7 +152,10 @@ async def translate(ctx, arg, *, args=None):
 	await ctx.send(''.join(row_to(["name."+arg], poke_row)))
 
 @bot.command(brief="Pokemon name at the tip of your tongue?")
-async def regex(ctx, *, args):
+async def regex(ctx, *, args=None):
+	if args == None:
+		ctx.send("No arguments supplied!")
+		return
 	poke_row = row_from(["name.en"], args, True)
 	if(poke_row == -1):
 		await ctx.send(f"Could not find a pokemon matching `{args}`")
@@ -180,7 +183,10 @@ async def regex(ctx, *, args):
 				await msg.edit(content=''.join(row_to(["name.en"], poke_row)))
 
 @bot.command(brief="Definitely not a Poketwo cheat...")
-async def hint(ctx, *, args):
+async def hint(ctx, *, args=None):
+	if args == None:
+		ctx.send("No arguments supplied!")
+		return
 	args = ''.join(['^', args.replace('_', '.'), '$'])
 	await ctx.invoke(bot.get_command('regex'), args=args)
 
