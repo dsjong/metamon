@@ -54,10 +54,10 @@ async def transform(ctx, *, args=None):
 		await ctx.send("Come on now. Really?")
 		return
 	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{poke_id}.png", 'rb') as img:
+		transform_time = time()
 		pfp = img.read()
 		await bot.user.edit(avatar=pfp)
 		await ctx.send(f"Ditto transformed into {name}!")
-		transform_time = time()
 		await asyncio.sleep(600)
 		transform_time = -1
 		pfp = open(Path(__file__).parent / "data" / "images" / f"132.png", 'rb').read()
