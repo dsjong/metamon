@@ -246,7 +246,7 @@ async def image(ctx, *, args=None):
 		await ctx.send(file=discord.File(img))
 
 @bot.command(brief="Spawns a random pokemon")
-@commands.cooldown(1, 0, commands.BucketType.user)
+@commands.cooldown(1, 20, commands.BucketType.user)
 async def spawn(ctx):
 	if random.random() <= 0.6:
 		await ctx.send(random.choice([
