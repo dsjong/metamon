@@ -13,7 +13,7 @@ load_dotenv('.env')
 
 bot = commands.Bot(command_prefix='p!')
 
-#----------Error handling----------
+#----------General error handling----------
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -21,7 +21,9 @@ async def on_command_error(ctx, error):
 		await ctx.send("I don't understand.")
 	elif isinstance(error, commands.CommandOnCooldown):
 		await ctx.send('Command on cooldown. Try again in `%.2fs`.' % error.retry_after)
-	raise error
+
+	#turn on for terminal debugging
+	#raise error
 
 #----------Bot-related commands----------
 @bot.event
@@ -246,9 +248,10 @@ async def image(ctx, *, args=None):
 		await ctx.send(file=discord.File(img))
 
 @bot.command(brief="Spawns a random pokemon")
-@commands.cooldown(1, 20, commands.BucketType.user)
+@commands.cooldown(1, 0, commands.BucketType.user) #20
 async def spawn(ctx):
-	if random.random() <= 0.3:
+	TIME_LIMIT = 15
+	if random.random() <= 0: #0.3
 		await ctx.send(random.choice([
 			"You forgot your Pokeballs at home! Sucks to be you...",
 			"Nearby pokemon sensed your orzness and fled!"]))
@@ -257,10 +260,19 @@ async def spawn(ctx):
 	poke_id, poke_name = row_to(["id", "name.en"], poke_row)
 	with open(Path(__file__).parent / "data" / "images" / f"{poke_id}.png", 'rb') as img:
 		file = discord.File(img, filename="wild.png")
-		embed=discord.Embed(title="A wild pokemon has appeared!", description="Guess the pokemon and type its name to catch it!")
+		embed=discord.Embed(title="A wild pokemon has appeared!", description=f"Guess the pokemon and type its name within {TIME_LIMIT} seconds to catch it!")
 		embed.set_image(url="attachment://wild.png")
 		embed.set_footer(text=f"Spawned by {ctx.author}")
 		await ctx.send(embed=embed, file=file)
+
+	def check(msg):
+		return msg.content.lower() == poke_name.lower()
+
+	try:
+		msg = await bot.wait_for('message', check=check, timeout=TIME_LIMIT)
+		await ctx.send(f"Congratulations {msg.author.mention}! You caught a **{poke_name}**!")
+	except asyncio.TimeoutError:
+		await ctx.send(f"Time's up! The wild **{poke_name}** fled.")
 
 #----------construction----------
 '''
