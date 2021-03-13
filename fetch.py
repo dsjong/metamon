@@ -5,6 +5,7 @@ from typing import List
 import constants
 import re
 import inspect
+import random
 from constants import *
 
 
@@ -21,7 +22,7 @@ def from_args(func):
 			shiny = True
 		poke_row = row_from(name_cols, poke_name)
 		if poke_row == -1 or (not row_to(["enabled"], poke_row)):
-			await args[0].send(f"Could not find a pokemon matching `{kwargs['args']}`")
+			await ctx.send(f"Could not find a pokemon matching `{kwargs['args']}`")
 			return
 		await func(*args, args=[poke_row, shiny])
 	wrapper.__name__ = func.__name__
@@ -56,3 +57,11 @@ def row_to(cols: List[str], row):
 	if(row == -1): return []
 	file = get_data_from("pokemon.csv")
 	return [value for value in (file[row].get(x, None) for x in cols) if value != None]
+
+def random_spawn():
+	file = get_data_from("pokemon.csv")
+	pool = [x for x in range(1, len(file)) if file[x].get("catchable", False)]
+	x = random.choices(pool, weights=[file[x]["abundance"] for x in pool], k=1)[0]
+	return x
+
+random_spawn()

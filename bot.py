@@ -7,10 +7,21 @@ from time import time
 from itertools import cycle
 from fetch import *
 from constants import *
+import random
 
 load_dotenv('.env')
 
 bot = commands.Bot(command_prefix='p!')
+
+#----------Error handling----------
+
+@bot.event
+async def on_command_error(ctx, error):
+	if isinstance(error, commands.CommandNotFound):
+		await ctx.send("I don't understand.")
+	elif isinstance(error, commands.CommandOnCooldown):
+		await ctx.send('Command on cooldown. Try again in `%.2fs`.' % error.retry_after)
+	raise error
 
 #----------Bot-related commands----------
 @bot.event
@@ -230,9 +241,26 @@ async def evolutions(ctx, *, args=None):
 @from_args
 async def image(ctx, *, args=None):
 	poke_row, shiny = args
-	poke_id = row_to(["id", "name.en"], poke_row)[0]
+	poke_id = row_to(["name.en"], poke_row)[0]
 	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{poke_id}.png", 'rb') as img:
 		await ctx.send(file=discord.File(img))
+
+@bot.command(brief="Spawns a random pokemon")
+@commands.cooldown(1, 0, commands.BucketType.user)
+async def spawn(ctx):
+	if random.random() <= 0.6:
+		await ctx.send(random.choice([
+			"You forgot your Pokeballs at home! Sucks to be you...",
+			"Nearby pokemon sensed your orzness and fled!"]))
+		return
+	poke_row = random_spawn()
+	poke_id, poke_name = row_to(["id", "name.en"], poke_row)
+	with open(Path(__file__).parent / "data" / "images" / f"{poke_id}.png", 'rb') as img:
+		file = discord.File(img, filename="wild.png")
+		embed=discord.Embed(title="A wild pokemon has appeared!", description="Guess the pokemon and type its name to catch it!")
+		embed.set_image(url="attachment://wild.png")
+		embed.set_footer(text=f"Spawned by {ctx.author}")
+		await ctx.send(embed=embed, file=file)
 
 #----------construction----------
 '''
