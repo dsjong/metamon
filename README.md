@@ -11,6 +11,7 @@ For Infobot:
 - analysis [pokemon]: links Smogon analysis with sets
 - compare [pokemon 1, pokemon2]: side by side analysis of base stats
 - implement bulb
+- add the njb ditto joke
 
 Roadmap
 

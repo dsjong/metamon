@@ -29,6 +29,7 @@ def from_args(func):
 	wrapper.__signature__ = inspect.signature(func)
 	return wrapper
 
+#----------general----------
 def isnumber(v):
 	try: int(v)
 	except ValueError: return False

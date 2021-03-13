@@ -241,14 +241,14 @@ async def evolutions(ctx, *, args=None):
 @from_args
 async def image(ctx, *, args=None):
 	poke_row, shiny = args
-	poke_id = row_to(["name.en"], poke_row)[0]
+	poke_id = row_to(["id"], poke_row)[0]
 	with open(Path(__file__).parent / "data" / ("shiny" if shiny else "images") / f"{poke_id}.png", 'rb') as img:
 		await ctx.send(file=discord.File(img))
 
 @bot.command(brief="Spawns a random pokemon")
 @commands.cooldown(1, 20, commands.BucketType.user)
 async def spawn(ctx):
-	if random.random() <= 0.6:
+	if random.random() <= 0.3:
 		await ctx.send(random.choice([
 			"You forgot your Pokeballs at home! Sucks to be you...",
 			"Nearby pokemon sensed your orzness and fled!"]))
