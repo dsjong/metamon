@@ -20,7 +20,7 @@ async def on_command_error(ctx, error):
 	if isinstance(error, commands.CommandNotFound):
 		await ctx.send("I don't understand.")
 	elif isinstance(error, commands.CommandOnCooldown):
-		await ctx.send('Command on cooldown. Try again in `%.2fs`.' % error.retry_after)
+		await ctx.send(f"Command on cooldown. Try again in **{round(error.retry_after)} seconds**.")
 	else: raise error
 
 #----------Bot-related commands----------
