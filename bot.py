@@ -249,7 +249,7 @@ async def image(ctx, *, args=None):
 @commands.cooldown(1, 20, commands.BucketType.user)
 async def spawn(ctx):
 	TIME_LIMIT = 15
-	if random.random() <= 0.2:
+	if random.random() <= 0.3:
 		await ctx.send(random.choice([
 			"You forgot your Pokeballs at home! Sucks to be you...",
 			"Nearby pokemon sensed your orzness and fled!"]))

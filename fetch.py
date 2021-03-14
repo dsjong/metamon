@@ -8,7 +8,6 @@ import inspect
 import random
 from constants import *
 
-
 #----------decorators----------
 def from_args(func):
 	async def wrapper(*args, **kwargs):
@@ -64,5 +63,3 @@ def random_spawn():
 	pool = [x for x in range(1, len(file)) if file[x].get("catchable", False)]
 	x = random.choices(pool, weights=[file[x]["abundance"] for x in pool], k=1)[0]
 	return x
-
-random_spawn()
